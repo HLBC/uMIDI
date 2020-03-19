@@ -12,8 +12,13 @@ namespace Notes
     [Serializable]
     public class Note
     {
+        public static readonly int ALL_NOTES = 12;
+        public static readonly int BASE_NOTES = 7;
+
         [SerializeField] private NoteName note;
+        public NoteName Name { get { return note; } }
         [SerializeField] private int octave;
+        public int Octave { get { return octave; } }
 
         public Note()
         {

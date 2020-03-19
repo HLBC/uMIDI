@@ -5,12 +5,11 @@ using Notes;
 [RequireComponent(typeof(AudioSource))]
 public class AudioTest : MonoBehaviour
 {
-    public Note[] notes = new Note[1];
-    public float[] freqs = {};
-    public float[] ampls = {};
+    private float[] freqs = {};
+    private float[] amps = {};
     private float sampleRate;
     private float step;
-    public float phase;
+    private float phase;
 
     public bool running = false;
 
@@ -18,31 +17,50 @@ public class AudioTest : MonoBehaviour
 
     void Start()
     {
-        running = false;
+        TurnOff();
+
         sampleRate = AudioSettings.outputSampleRate;
         step = 1 / sampleRate;
-        Debug.Log(sampleRate);
 
         note_step = Mathf.Pow(2, 1 / 12f);
+    }
 
-        freqs = new float[notes.Length];
+    public void TurnOn()
+    {
+        running = true;
+    }
+
+    public void TurnOff()
+    {
+        running = false;
+    }
+
+    public void SetNotes(Note[] notes)
+    {
+        float[] freqs = new float[notes.Length];
         for (int i = 0; i < notes.Length; i++)
             freqs[i] = NoteFreq(notes[i].KeyPos());
 
-        ampls = new float[notes.Length];
+        float [] amps = new float[notes.Length];
         for (int i = 0; i < notes.Length; i++)
-            ampls[i] = 1f / notes.Length;
+            amps[i] = 1f / notes.Length;
+
+        SetAmpFreqPairs(freqs, amps);
     }
 
-    void Update()
+    public void SetAmpFreqPairs(float[] freqs, float[] amps)
     {
-        running = (running && Input.GetKeyDown(KeyCode.DownArrow)) 
-              || (!running && Input.GetKeyDown(KeyCode.UpArrow))
-               ?  !running  : running;
+        this.freqs = (float[])freqs.Clone();
+        this.amps = new float[freqs.Length];
+        for (int i = 0; i < this.amps.Length; i++)
+            this.amps[i] = (i < amps.Length ? amps[i] : 0);
     }
 
     void OnAudioFilterRead(float[] data, int channels)
     {
+        float[] curr_freqs = (float[])freqs.Clone();
+        float[] curr_amps = (float[])amps.Clone();
+
         if (!running)
             return;
 
@@ -50,7 +68,7 @@ public class AudioTest : MonoBehaviour
 
         for (int s = 0; s < samples; s++)
         {
-            data[s * channels] = MultiSin(freqs, ampls, phase);
+            data[s * channels] = MultiSin(curr_freqs, curr_amps, phase);
             if (channels > 1)
                 data[s * channels + 1] = data[s * channels];
             // Mathf.Sin(t) -> 1 cycle per 2pi seconds

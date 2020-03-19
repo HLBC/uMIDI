@@ -135,8 +135,9 @@ GameObject:
   - component: {fileID: 93390082}
   - component: {fileID: 93390081}
   - component: {fileID: 93390080}
+  - component: {fileID: 93390086}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Synth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -154,18 +155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8634c87590d47409bbe44d12de83ea13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notes:
-  - note: 0
-    octave: 4
-  - note: 4
-    octave: 4
-  - note: 7
-    octave: 4
-  - note: 0
-    octave: 5
-  freqs: []
-  ampls: []
-  phase: 0
   running: 0
 --- !u!82 &93390081
 AudioSource:
@@ -337,6 +326,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &93390086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93390079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f815a107a1b50491480b541176881251, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequence:
+  - note: 0
+    octave: 5
+  - note: 1
+    octave: 5
+  - note: 2
+    octave: 5
+  - note: 3
+    octave: 5
+  chordIntervals: 0300000005000000
+  source: {fileID: 0}
+  tempo: 360
+  delayTicker: 1
+  percentNoteOn: 0.2
 --- !u!1 &1136287162
 GameObject:
   m_ObjectHideFlags: 0
