@@ -15,73 +15,46 @@ public class TestSequencer : MonoBehaviour
     public float beatOffset = 0.5f;
     public float beatDuration = 0.25f;
 
+    public float beatSetDelay = 4;
+    public int beatsPerSet = 3;
+
     void Start()
     {
         if (instrument == null)
             instrument = GetComponent<BasicInstrument>();
 
         if (instrument != null)
-            StartCoroutine(StartTicker());
+        {
+            instrument.running = true;
+            StartCoroutine(Ticker());
+        }
     }
 
-    private IEnumerator StartTicker()
+    private static long TickOf(float seconds)
     {
-        yield return new WaitForSecondsRealtime(1.0f);
-        instrument.running = true;
-        StartCoroutine(Ticker());
+        return (long)(BasicInstrument.MICROSECONDS_PER_SECOND * seconds);
     }
 
-    private static TimingTickMessage TickOf(float seconds)
+    private void SendNote(Note note)
     {
-        return new TimingTickMessage((long)(BasicInstrument.MICROSECONDS_PER_SECOND * seconds));
+        NoteOnMessage noteOn = new NoteOnMessage(note, TickOf(beatOffset));
+        NoteOffMessage noteOff = new NoteOffMessage(note, TickOf(beatDuration));
+
+        Debug.Log("Sending message: " + noteOn);
+        Debug.Log("Sending message: " + noteOff);
+        instrument.ProcessMidi(new IMessage[] { noteOn, noteOff });
     }
 
     private IEnumerator Ticker()
     {
-        Note prev = new Note(0, 0, 0, 0);
         while (true)
         {
-            Note note = new Note(0, (byte)sequence[sequenceTick].KeyPos(), 1, 0);
-
-            NoteOnMessage noteOn = new NoteOnMessage(note, 0);
-            NoteOffMessage noteOff = new NoteOffMessage(prev, 0);
-
-            if (beatOffset <= beatDuration)
+            yield return new WaitForSeconds(beatSetDelay);
+            for (int i = 0; i < beatsPerSet; i++)
             {
-                // New note on messages come before previous note off messages
-                // |-----|    => offset
-                // |--------| => duration
-                // [--prev--]
-                //          |
-                //       [--curr--]
-                //       |        |
-                //             [--next--]
-                //             |
-                //   On, wait, off, wait
-                TimingTickMessage afterOn  = TickOf(beatDuration - beatOffset);
-                TimingTickMessage afterOff = TickOf(2 * beatOffset - beatDuration);
-                instrument.ProcessMidi(new IMessage[] { noteOn, afterOn, noteOff, afterOff });
+                SendNote(new Note(0, (byte)sequence[sequenceTick].KeyPos(), 1, 0));
+                sequenceTick = (sequenceTick + 1) % sequence.Length;
             }
-            else
-            {
-                // New note on messages come AFTER previous note off messages
-                // |-----------| => offset
-                // |--------|    => duration
-                // [--prev--]
-                //          |
-                //             [--curr--]
-                //             |        |
-                //                         [--next--]
-                //                         |
-                //   Off, wait, on, wait
-                TimingTickMessage afterOff = TickOf(beatOffset);
-                TimingTickMessage afterOn  = TickOf(beatDuration);
-                instrument.ProcessMidi(new IMessage[] { noteOff, afterOff, noteOn, afterOn });
-            }
-
-            sequenceTick = (sequenceTick + 1) % sequence.Length;
-            prev = note;
-            yield return new WaitForSeconds(beatOffset);
         }
     }
 }
