@@ -131,5 +131,18 @@ public abstract class BasicInstrument : MonoBehaviour, IMidiInstrument
             }
         }
     }
+
+    // Class used to declare explicit time separations between messages being processed.
+    private class TimingTickMessage : IMessage
+    {
+        public long TimeDelta { get; }
+
+        public TimingTickMessage(long time)
+        {
+            TimeDelta = time;
+        }
+
+        public MidiMessage Message => throw new InvalidOperationException();
+    }
     #endregion
 }

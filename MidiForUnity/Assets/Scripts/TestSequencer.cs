@@ -37,8 +37,9 @@ public class TestSequencer : MonoBehaviour
 
     private void SendNote(Note note)
     {
-        NoteOnMessage noteOn = new NoteOnMessage(note, TickOf(beatOffset));
-        NoteOffMessage noteOff = new NoteOffMessage(note, TickOf(beatDuration));
+        note.Time = TickOf(beatDuration);
+        NoteOnMessage noteOn = new NoteOnMessage(note);//, TickOf(beatOffset));
+        NoteOffMessage noteOff = new NoteOffMessage(note);//, TickOf(beatDuration));
 
         Debug.Log("Sending message: " + noteOn);
         Debug.Log("Sending message: " + noteOff);
