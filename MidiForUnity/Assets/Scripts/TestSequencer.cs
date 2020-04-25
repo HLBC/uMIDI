@@ -52,7 +52,7 @@ public class TestSequencer : MonoBehaviour
             yield return new WaitForSeconds(beatSetDelay);
             for (int i = 0; i < beatsPerSet; i++)
             {
-                SendNote(new Note(0, (byte)sequence[sequenceTick].KeyPos(), 1, 0));
+                SendNote(new Note(0, (byte)sequence[sequenceTick].KeyPos(), byte.MaxValue, 0));
                 sequenceTick = (sequenceTick + 1) % sequence.Length;
             }
         }
