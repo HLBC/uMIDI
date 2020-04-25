@@ -10,6 +10,9 @@ public abstract class BasicInstrument : MonoBehaviour, IMidiInstrument
     private long ticks = 0; // TODO: Treats all times as microseconds
     public bool running = false;
 
+    public static readonly int ALL_CHANNELS = -1;
+    public int channel = ALL_CHANNELS;
+
     protected abstract void UpdateNotes(float timeDelta);
 
     protected abstract void StartNote(Note note);
@@ -44,18 +47,29 @@ public abstract class BasicInstrument : MonoBehaviour, IMidiInstrument
 
     private static bool OnNoteOn(IMessage message, BasicInstrument inst)
     {
-        return CheckAndApply<NoteOnMessage>(message, (msg) => inst.StartNote(msg.Note));
+        return CheckAndApply<NoteOnMessage>(message, (msg) => {
+                if (inst.MatchesChannel(msg.Note))
+                    inst.StartNote(msg.Note);
+        });
     }
 
     private static bool OnNoteOff(IMessage message, BasicInstrument inst)
     {
-        return CheckAndApply<NoteOffMessage>(message, (msg) => inst.StopNote(msg.Note));
+        return CheckAndApply<NoteOffMessage>(message, (msg) => {
+            if (inst.MatchesChannel(msg.Note))
+                inst.StopNote(msg.Note);
+        });
     }
 
     private static bool OnTimeTickMessage(IMessage message, BasicInstrument inst)
     {
         // TODO: Once MidiStream.MillisecondsPerTick is implemented, this needs to use that.
         return CheckAndApply<TimingTickMessage>(message, (msg) => inst.ticks = msg.TimeDelta);
+    }
+
+    private bool MatchesChannel(Note note)
+    {
+        return channel == ALL_CHANNELS || channel == note.Channel;
     }
 
     private static bool CheckAndApply<T>(IMessage message, Action<T> act)
