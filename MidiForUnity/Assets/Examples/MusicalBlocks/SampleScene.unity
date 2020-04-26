@@ -590,7 +590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &537149607
 AudioSource:
   m_ObjectHideFlags: 0
@@ -717,6 +717,12 @@ MonoBehaviour:
   sequence:
   - note: 3
     octave: 4
+  - note: 3
+    octave: 5
+  - note: 3
+    octave: 6
+  - note: 7
+    octave: 3
   beatOffset: 0.5
   beatDuration: 0.25
   beatSetDelay: 4
