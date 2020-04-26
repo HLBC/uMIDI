@@ -582,13 +582,15 @@ GameObject:
   m_Component:
   - component: {fileID: 537149608}
   - component: {fileID: 537149607}
+  - component: {fileID: 537149610}
+  - component: {fileID: 537149609}
   m_Layer: 0
   m_Name: Sound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!82 &537149607
 AudioSource:
   m_ObjectHideFlags: 0
@@ -596,7 +598,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 537149606}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 243686457154912612, guid: bdcd9749642d9b94199a391c1b4191b5,
     type: 2}
@@ -700,6 +702,44 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &537149609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537149606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0521892fa07b641e99b0c412db5e4758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instrument: {fileID: 537149610}
+  sequence:
+  - note: 9
+    octave: 4
+  - note: 2
+    octave: 4
+  - note: 6
+    octave: 4
+  beatOffset: 0.5
+  beatDuration: 0.25
+  beatSetDelay: 4
+  beatsPerSet: 3
+--- !u!114 &537149610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537149606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf86abe1ef32488b99a0bdc691fdc95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  running: 1
+  channel: -1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
