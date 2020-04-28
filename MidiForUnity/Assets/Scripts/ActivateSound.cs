@@ -15,6 +15,7 @@ public class ActivateSound : MonoBehaviour
         if (other.gameObject.CompareTag("Player") && !other.isTrigger)
             {
             sound.SetActive(false);
+           
             sound.SetActive(true);
 
         }
