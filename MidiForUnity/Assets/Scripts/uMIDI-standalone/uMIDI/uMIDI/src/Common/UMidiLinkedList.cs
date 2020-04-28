@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-// Lowkey might give up on this -Robbie
-
+// THIS IMPLEMENTATION IS NOT COMPLETE AND MAY BE SCRAPPED. DO NOT USE THIS
+// Custom Linked List implementation to support constant time concatenation and
+// other operations in case such performance is needed in order to play MIDI in
+// real time.
 namespace uMIDI.src.Common
 {
     public class UMidiLinkedList<T> : IList<T>

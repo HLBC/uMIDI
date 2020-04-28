@@ -5,12 +5,12 @@ namespace uMIDI.IO
     public class MidiStreamState
     {
         public ISet<byte> NotesOn { get; }
-        public ulong CurrentTick { get; }
+        public MidiClock Clock { get; }
 
-        public MidiStreamState()
+        public MidiStreamState(int ticksPerBeat)
         {
             NotesOn = new HashSet<byte>();
-            CurrentTick = 0;
+            Clock = new MidiClock(ticksPerBeat);
         }
     }
 }

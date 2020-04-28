@@ -2,10 +2,19 @@
 
 namespace uMIDI.Common
 {
-    public class IMessageUtility
+    /// <summary>
+    /// Class of utility functions.
+    /// </summary>
+    public class MessageUtility
     {
-        private IMessageUtility() { }
+        private MessageUtility() { }
 
+        /// <summary>
+        /// Converts a MidiMessage struct of byte data to an IMessage object.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="timeDelta"></param>
+        /// <returns></returns>
         public static IMessage ToIMessage(MidiMessage msg, long timeDelta)
         {
             if (0x80 <= msg.Status && msg.Status < 0x90)
@@ -13,18 +22,18 @@ namespace uMIDI.Common
                 return new NoteOffMessage(new Note(
                     (byte)(msg.Status % 0x10),
                     msg.Data[0],
-                    msg.Data[1],
-                    timeDelta
-                    ));
+                    msg.Data[1]
+                    ),
+                    timeDelta);
             }
             else if (0x90 <= msg.Status && msg.Status < 0xa0)
             {
                 return new NoteOnMessage(new Note(
                     (byte)(msg.Status % 0x10),
                     msg.Data[0],
-                    msg.Data[1],
-                    timeDelta
-                    ));
+                    msg.Data[1]
+                    ),
+                    timeDelta);
             }
             else if (msg.Status == 0xff)
             {
@@ -37,6 +46,13 @@ namespace uMIDI.Common
             }
         }
 
+        /// <summary>
+        /// Converts a MetaMessage struct of byte data to an IMetaMessage
+        /// object.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="timeDelta"></param>
+        /// <returns></returns>
         public static IMetaMessage ToIMetaMessage(MetaMessage msg,
             long timeDelta)
         {

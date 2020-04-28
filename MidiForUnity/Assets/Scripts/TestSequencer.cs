@@ -37,9 +37,8 @@ public class TestSequencer : MonoBehaviour
 
     private void SendNote(Note note)
     {
-        note.Time = TickOf(beatDuration);
-        NoteOnMessage noteOn = new NoteOnMessage(note);//, TickOf(beatOffset));
-        NoteOffMessage noteOff = new NoteOffMessage(note);//, TickOf(beatDuration));
+        NoteOnMessage noteOn = new NoteOnMessage(note, TickOf(beatOffset));
+        NoteOffMessage noteOff = new NoteOffMessage(note, TickOf(beatDuration));
 
         Debug.Log("Sending message: " + noteOn);
         Debug.Log("Sending message: " + noteOff);
@@ -53,7 +52,7 @@ public class TestSequencer : MonoBehaviour
             yield return new WaitForSeconds(beatSetDelay);
             for (int i = 0; i < beatsPerSet; i++)
             {
-                SendNote(new Note(0, (byte)sequence[sequenceTick].KeyPos(), byte.MaxValue, 0));
+                SendNote(new Note(0, (byte)sequence[sequenceTick].KeyPos(), byte.MaxValue));
                 sequenceTick = (sequenceTick + 1) % sequence.Length;
             }
         }

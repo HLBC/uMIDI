@@ -1,23 +1,82 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace uMIDI.Common
 {
-    public class Note
+    /// <summary>
+    /// Represents a note with a channel, pitch, and velocity. There are 16
+    /// possible channels, 128 possible pitches, and 128 possible velocity
+    /// values.
+    /// </summary>
+    public class Note : IEquatable<Note>
     {
-        public byte Channel { get; set; }
-        public byte Pitch { get; set; }
-        public byte Velocity { get; set; }
+        private byte _channel;
+        public byte Channel
+        {
+            get => _channel;
+            set
+            {
+                if (value < 16 && value >= 0)
+                {
+                    _channel = value;
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        "Channel must be between 0 and 15");
+                }
+            }
+        }
 
-        public long Time { get; set; }
+        private byte _pitch;
+        public byte Pitch {
+            get => _pitch;
+            set
+            {
+                if (value < 128 && value >= 0)
+                {
+                    _pitch = value;
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        "Channel must be between 0 and 127");
+                }
+            }
+        }
 
-        public Note(byte channel, byte pitch, byte velocity, long time)
+        private byte _velocity;
+        public byte Velocity {
+            get => _velocity;
+            set
+            {
+                if (value < 128 && value >= 0)
+                {
+                    _velocity = value;
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        "Velocity must be between 0 and 127");
+                }
+            }
+        }
+
+        public Note(byte channel, byte pitch, byte velocity)
         {
             Channel = channel;
             Pitch = pitch;
             Velocity = velocity;
-            Time = time;
         }
-        
+
+        /// <summary>
+        /// Returns a new <see cref="Note"/> object transposed by a given
+        /// interval.
+        /// </summary>
+        /// <param name="interval">Number of semitones by which the
+        /// transposition is performed. Positive values represent an increase
+        /// in pitch, and vice versa.</param>
+        /// <returns>A new <see cref="Note"/> object.</returns>
         public Note Transpose(byte interval)
         {
             int newPitch = Pitch + interval;
@@ -25,9 +84,13 @@ namespace uMIDI.Common
             {
                 throw new ArgumentException("Resulting pitch is too high/low!");
             }
-            return new Note(Channel, (byte) newPitch, Velocity, Time);
+            return new Note(Channel, (byte) newPitch, Velocity);
         }
 
+        /// <summary>
+        /// Returns the note name as a string. Only returns sharps.
+        /// </summary>
+        /// <returns></returns>
         public string Name()
         {
             string noteName;
@@ -84,9 +147,25 @@ namespace uMIDI.Common
             // TODO (maybe; maybe we don't need it)
             throw new NotImplementedException();
         }
+
+        public bool Equals([AllowNull] Note other)
+        {
+            return Channel == other.Channel && Pitch == other.Pitch
+                && Velocity == other.Velocity;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("(Note {2} {0} ({1}) {3})",
+                Pitch, Name(), Channel, Velocity);
+        }
     }
 
-    public class KeySignature
+    /// <summary>
+    /// Represents a key signature: a tonic center, and a scale (currently only
+    /// the major scale and natural minor scale are supported.)
+    /// </summary>
+    public class KeySignature : IEquatable<KeySignature>
     {
         public Tonic Tonic { get; set; }
         public Scale Scale { get; set; }
@@ -96,8 +175,16 @@ namespace uMIDI.Common
             Tonic = tonic;
             Scale = scale;
         }
+
+        public bool Equals([AllowNull] KeySignature other)
+        {
+            return Tonic == other.Tonic && Scale == other.Scale;
+        }
     }
 
+    /// <summary>
+    /// Enum of the 12-tone chromatic scale. Enharmonic notes are not supported.
+    /// </summary>
     public enum Tonic
     {
         C = 0,
@@ -114,11 +201,19 @@ namespace uMIDI.Common
         B = 11
     }
 
+    /// <summary>
+    /// Enum of scales. Currently only the major and natural minor scales are
+    /// supported.
+    /// </summary>
     public enum Scale
     {
         MAJOR, MINOR
     }
 
+    /// <summary>
+    /// Enum representing interval names and the associated difference in pitch
+    /// in semitones.
+    /// </summary>
     public enum Interval
     {
         UNISON = 0,

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using uMIDI.Common;
-using uMIDI.Transform;
 
 namespace uMIDI.IO
 {
@@ -11,9 +10,14 @@ namespace uMIDI.IO
         private LinkedList<IMessage> buffer;
         private int bufferCount;
 
-        public MidiStream()
+        public MidiStream() : this(48)
         {
-            State = new MidiStreamState();
+
+        }
+
+        public MidiStream(int ticksPerBeat)
+        {
+            State = new MidiStreamState(ticksPerBeat);
             instruments = new HashSet<IMidiInstrument>();
             bufferCount = 0;
         }
